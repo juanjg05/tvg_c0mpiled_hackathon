@@ -33,3 +33,29 @@ export function formatDollars(n: number): string {
     maximumFractionDigits: 0,
   }).format(n);
 }
+
+/** Format lat/lng as human-readable location (e.g. "41.878°N, 87.630°W"). */
+export function formatLatLng(lat: number, lng: number): string {
+  const ns = lat >= 0 ? "N" : "S";
+  const ew = lng >= 0 ? "E" : "W";
+  return `${Math.abs(lat).toFixed(3)}°${ns}, ${Math.abs(lng).toFixed(3)}°${ew}`;
+}
+
+/** Centroid of a GeoJSON Polygon or MultiPolygon (first ring only). Returns [lat, lng]. */
+export function getCentroidFromPolygon(geom: {
+  type: string;
+  coordinates: number[][][] | number[][][][];
+}): [number, number] | null {
+  const ring: number[][] =
+    geom.type === "Polygon"
+      ? (geom.coordinates as number[][][])[0]
+      : (geom.coordinates as number[][][][])[0]?.[0];
+  if (!ring?.length) return null;
+  let sumLat = 0,
+    sumLng = 0;
+  for (const [lng, lat] of ring) {
+    sumLat += lat;
+    sumLng += lng;
+  }
+  return [sumLat / ring.length, sumLng / ring.length];
+}

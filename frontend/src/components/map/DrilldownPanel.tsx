@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { fetchCellDetail, fetchRecommendationDetail } from "@/lib/api";
-import { formatPercent } from "@/lib/mapUtils";
+import { formatPercent, formatLatLng } from "@/lib/mapUtils";
 import type { CellDetailResponse, RecommendationDetailResponse } from "@/types/api";
 
 interface DrilldownPanelProps {
   h3Id: string | null;
+  cellLocation?: { lat: number; lng: number } | null;
   recId: string | null;
   onClose: () => void;
 }
 
 export default function DrilldownPanel({
   h3Id,
+  cellLocation,
   recId,
   onClose,
 }: DrilldownPanelProps) {
@@ -48,7 +50,13 @@ export default function DrilldownPanel({
     <div className="absolute bottom-4 right-4 z-[1000] max-h-[300px] w-80 overflow-y-auto rounded-lg border border-[#1e2630] bg-[#1e2630] p-4 shadow-xl">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="font-semibold text-zinc-100">
-          {h3Id ? `Cell ${h3Id.slice(-4)}` : recId ? `Recommendation ${recId}` : "Details"}
+          {h3Id
+            ? cellLocation
+              ? `Near ${formatLatLng(cellLocation.lat, cellLocation.lng)}`
+              : `Cell ${h3Id.slice(-4)}`
+            : recId
+              ? `Recommendation ${recId}`
+              : "Details"}
         </h3>
         <button
           onClick={onClose}
@@ -65,6 +73,13 @@ export default function DrilldownPanel({
         <p className="text-sm text-zinc-400">
           Connect a backend to view details. Set NEXT_PUBLIC_API_URL in .env.local.
         </p>
+      )}
+
+      {cellLocation && h3Id && (
+        <div className="mb-2">
+          <p className="text-xs text-zinc-400">Location</p>
+          <p className="font-mono text-sm text-zinc-200">{formatLatLng(cellLocation.lat, cellLocation.lng)}</p>
+        </div>
       )}
 
       {cellData && !loading && (

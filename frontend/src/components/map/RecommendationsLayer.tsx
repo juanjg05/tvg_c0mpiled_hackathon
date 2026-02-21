@@ -34,7 +34,7 @@ export default function RecommendationsLayer({
   }, [map]);
 
   useEffect(() => {
-    if (!bbox || !process.env.NEXT_PUBLIC_API_URL) return;
+    if (!process.env.NEXT_PUBLIC_API_URL) return;
 
     fetchRecommendations({
       bbox,

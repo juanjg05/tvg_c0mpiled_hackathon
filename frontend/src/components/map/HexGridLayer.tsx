@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { GeoJSON, useMap, useMapEvents } from "react-leaflet";
 import type { Feature, Polygon } from "geojson";
 import { fetchRisk, fetchCost } from "@/lib/api";
-import { getBbox, pEventToColor, costToColor } from "@/lib/mapUtils";
+import { getBbox, pEventToColor, costToColor, getCentroidFromPolygon, formatLatLng } from "@/lib/mapUtils";
 import type { RiskFeatureCollection, CostFeatureCollection } from "@/types/api";
 
 interface HexGridLayerProps {
@@ -16,7 +16,7 @@ interface HexGridLayerProps {
   minConfidence: number;
   minCostUsd: number;
   costMode: string;
-  onCellClick?: (h3Id: string) => void;
+  onCellClick?: (h3Id: string, coords?: { lat: number; lng: number }) => void;
 }
 
 export default function HexGridLayer({
@@ -45,7 +45,7 @@ export default function HexGridLayer({
   });
 
   useEffect(() => {
-    if (!bbox || !process.env.NEXT_PUBLIC_API_URL) return;
+    if (!process.env.NEXT_PUBLIC_API_URL) return;
 
     if (layerRisk) {
       fetchRisk({
@@ -63,7 +63,7 @@ export default function HexGridLayer({
   }, [bbox, date, horizonDays, layerRisk, minRisk, minConfidence]);
 
   useEffect(() => {
-    if (!bbox || !process.env.NEXT_PUBLIC_API_URL) return;
+    if (!process.env.NEXT_PUBLIC_API_URL) return;
 
     if (layerCost) {
       fetchCost({
@@ -83,8 +83,8 @@ export default function HexGridLayer({
   const styleFeature = (feature?: { properties?: Record<string, unknown> }) => {
     if (!feature?.properties) return {};
     const props = feature.properties;
-    if (layerRisk && "p_event" in props) {
-      const p = props.p_event as number;
+    if (layerRisk && ("p_event" in props || "p_event_7d" in props)) {
+      const p = (props.p_event as number) ?? (props.p_event_7d as number) ?? 0;
       const conf = (props.confidence as number) ?? 1;
       return {
         fillColor: pEventToColor(p),
@@ -93,8 +93,8 @@ export default function HexGridLayer({
         weight: 1,
       };
     }
-    if (layerCost && "cost_total_usd_mean" in props) {
-      const mean = props.cost_total_usd_mean as number;
+    if (layerCost && ("cost_total_usd_mean" in props || "expected_cost_usd_7d" in props)) {
+      const mean = (props.cost_total_usd_mean as number) ?? (props.expected_cost_usd_7d as number) ?? 0;
       return {
         fillColor: costToColor(mean),
         fillOpacity: 0.5,
@@ -110,8 +110,17 @@ export default function HexGridLayer({
     layer: L.Layer
   ) => {
     const h3Id = feature?.properties?.h3_id as string | undefined;
-    if (h3Id && onCellClick) {
-      layer.on("click", () => onCellClick(h3Id));
+    if (!h3Id) return;
+    const centroid = feature?.geometry ? getCentroidFromPolygon(feature.geometry) : null;
+    if (centroid) {
+      const [lat, lng] = centroid;
+      layer.bindTooltip(formatLatLng(lat, lng), {
+        sticky: true,
+        className: "font-mono text-xs bg-[#1e2630] border border-[#334155] text-zinc-200",
+      });
+    }
+    if (onCellClick) {
+      layer.on("click", () => onCellClick(h3Id, centroid ? { lat: centroid[0], lng: centroid[1] } : undefined));
     }
   };
 

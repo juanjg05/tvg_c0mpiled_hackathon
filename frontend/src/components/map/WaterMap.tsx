@@ -45,6 +45,7 @@ export default function WaterMap({
   locationId?: string;
 }) {
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
+  const [selectedCellLocation, setSelectedCellLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedRecId, setSelectedRecId] = useState<string | null>(null);
   const isChicago = locationId === "chicago";
   const loc = LOCATIONS.find((l) => l.id === locationId) ?? defaultCenter;
@@ -81,7 +82,10 @@ export default function WaterMap({
             minConfidence={filterState.minConfidence}
             minCostUsd={filterState.minCostUsd}
             costMode={filterState.costMode}
-            onCellClick={setSelectedCell}
+            onCellClick={(h3Id, coords) => {
+              setSelectedCell(h3Id);
+              setSelectedCellLocation(coords ?? null);
+            }}
           />
         )}
         {filterState.layer311 && (
@@ -107,9 +111,11 @@ export default function WaterMap({
       {(selectedCell || selectedRecId) && (
         <DrilldownPanel
           h3Id={selectedCell}
+          cellLocation={selectedCellLocation}
           recId={selectedRecId}
           onClose={() => {
             setSelectedCell(null);
+            setSelectedCellLocation(null);
             setSelectedRecId(null);
           }}
         />
