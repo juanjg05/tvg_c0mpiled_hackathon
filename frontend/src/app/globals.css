@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a; /* Slate 950 */
-  --background-alt: #1e293b; /* Slate 800 */
-  --surface: #334155; /* Slate 700 */
-  --foreground: #f8fafc; /* Slate 50 */
-  --foreground-muted: #94a3b8; /* Slate 400 */
-  --accent: #22d3ee;
-  --accent-dark: #0891b2; /* Slate 600 adjustment */
+  --background: #18181b; /* Zinc 900 */
+  --background-alt: #27272a; /* Zinc 800 */
+  --surface: #3f3f46; /* Zinc 700 */
+  --foreground: #fafafa; /* Zinc 50 */
+  --foreground-muted: #a1a1aa; /* Zinc 400 */
+  --accent: #fbbf24; /* Amber 400 */
+  --accent-dark: #d97706; /* Amber 600 */
 }
 
 @theme inline {
@@ -18,8 +18,16 @@
   --color-foreground-muted: var(--foreground-muted);
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+}
+
+.bg-hazard {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--accent),
+    var(--accent) 20px,
+    var(--background) 20px,
+    var(--background) 40px
+  );
 }
 
 body {

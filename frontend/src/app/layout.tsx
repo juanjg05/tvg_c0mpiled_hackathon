@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Water System",
-  description: "AI-powered water system monitoring and management",
+  title: "InfraFlow AI",
+  description: "Intelligent Water Infrastructure Monitoring",
 };
 
 export default function RootLayout({

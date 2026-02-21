@@ -28,7 +28,7 @@ export default function LocationSelector({ onLocationChange }: LocationSelectorP
   };
 
   return (
-    <div className="absolute left-4 top-4 z-[1000]">
+    <div className="absolute right-4 top-4 z-[1000]">
       <select
         onChange={handleChange}
         value={selectedId}

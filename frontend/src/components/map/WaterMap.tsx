@@ -54,6 +54,8 @@ export default function WaterMap({
       <MapContainer
         center={[loc.lat, loc.lng]}
         zoom={loc.zoom}
+        minZoom={loc.zoom - 1}
+        maxZoom={loc.zoom + 3}
         className="h-full w-full"
         scrollWheelZoom
       >
@@ -63,7 +65,11 @@ export default function WaterMap({
         />
         <SpaceToPanHandler />
         <LocationSelector />
-        <MapBoundsHandler bounds={loc.bounds} />
+        <MapBoundsHandler 
+          bounds={loc.bounds} 
+          minZoom={loc.zoom - 1}
+          maxZoom={loc.zoom + 3}
+        />
         {isChicago && <MinimapOverlay />}
         {(filterState.layerRisk || filterState.layerCost) && (
           <HexGridLayer

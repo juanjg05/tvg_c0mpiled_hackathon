@@ -215,7 +215,7 @@ function LayerToggle({
     <label
       className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border p-3 transition-all duration-200 ${
         checked
-          ? "border-accent/50 bg-accent/10 text-accent shadow-[0_0_20px_-5px_rgba(34,211,238,0.3)] ring-1 ring-accent/20"
+          ? "border-accent/50 bg-accent/10 text-accent shadow-[0_0_20px_-5px_rgba(251,191,36,0.3)] ring-1 ring-accent/20"
           : "border-surface bg-background/50 text-foreground-muted hover:border-surface-hover hover:bg-surface/30"
       }`}
     >

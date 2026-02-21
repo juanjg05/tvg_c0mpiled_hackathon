@@ -48,14 +48,14 @@ export default function MapSection() {
             value={filterState.layerRisk ? "12" : "--"}
             sub="Based on 7-day forecast"
             trend="+2 since yesterday"
-            color="text-rose-400"
+            color="text-amber-500"
           />
           <StatCard
             label="Infrastructure Cost"
             value={filterState.layerCost ? "$42.5k" : "--"}
             sub="Allocated energy/water"
             trend="-5% optimization"
-            color="text-amber-400"
+            color="text-yellow-400"
           />
           <StatCard
             label="Savings Opportunity"
