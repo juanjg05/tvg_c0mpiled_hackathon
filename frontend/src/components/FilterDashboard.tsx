@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useFilterParams } from "@/lib/useFilterParams";
 import { useMeta } from "@/lib/useMeta";
@@ -6,37 +8,65 @@ export default function FilterDashboard() {
   const { get, set } = useFilterParams();
   const { meta } = useMeta();
 
-  const today = new Date().toISOString().split("T")[0];
-
   return (
-    <div className="flex flex-col gap-6 p-5">
-      <div className="border-b border-surface pb-5">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">Filters</h2>
-        <p className="mt-1 text-xs text-foreground-muted">Analyze water infrastructure</p>
+    <div className="flex h-full flex-col overflow-hidden bg-background">
+      <div className="flex items-center justify-between border-b border-surface bg-accent px-6 py-4">
+        <h2 className="text-xs font-black uppercase tracking-widest text-background">
+          Control Panel
+        </h2>
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-background" />
+          <span className="text-[10px] font-bold uppercase tracking-tighter text-background/80">
+            System Active
+          </span>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <FilterSection title="Time" defaultOpen={true}>
-          <div className="space-y-3 pt-1">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-foreground-muted">Base Date</label>
-              <input
-                type="date"
-                value={get("date") || today}
-                onChange={(e) => set({ date: e.target.value })}
-                className="w-full rounded-lg border border-surface bg-background px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-foreground-muted">Forecast Horizon</label>
-              <select
-                value={get("horizon_days") || "7"}
-                onChange={(e) => set({ horizon_days: e.target.value })}
-                className="w-full rounded-lg border border-surface bg-background px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
-              >
-                <option value="1">1 day</option>
-                <option value="7">7 days</option>
-              </select>
+      <div className="industrial-scrollbar flex-1 overflow-y-auto p-4 space-y-4">
+        <FilterSection 
+          title="Analysis Parameters" 
+          icon={
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          }
+        >
+          <div className="space-y-4 rounded-xl border border-surface bg-background-alt/50 p-4">
+            <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-foreground-muted">
+                  Resource Threshold
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={get("threshold") || "50"}
+                  onChange={(e) => set({ threshold: e.target.value })}
+                  className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-surface accent-accent"
+                />
+                <div className="mt-1 flex justify-between text-[10px] font-bold text-accent">
+                  <span>MIN</span>
+                  <span>{get("threshold") || "50"}%</span>
+                  <span>MAX</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-foreground-muted">
+                  System Sentiment
+                </label>
+                <select
+                  value={get("sentiment") || "all"}
+                  onChange={(e) => set({ sentiment: e.target.value })}
+                  className="w-full rounded-lg border border-surface bg-background px-3 py-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-accent"
+                >
+                  <option value="all">Full Spectrum</option>
+                  <option value="positive">Optimal Operations</option>
+                  <option value="negative">High Stress</option>
+                  <option value="neutral">Normal Flow</option>
+                </select>
+              </div>
             </div>
           </div>
         </FilterSection>
@@ -50,7 +80,7 @@ export default function FilterDashboard() {
             />
             <LayerToggle
               label="Cost"
-              checked={get("layer_cost") !== "false"}
+              checked={get("layer_cost") === "true"}
               onChange={(v) => set({ layer_cost: v ? "true" : "false" })}
             />
             <LayerToggle
@@ -66,7 +96,7 @@ export default function FilterDashboard() {
             <div className="col-span-2">
               <LayerToggle
                 label="Weather Overlay"
-                checked={get("layer_weather") !== "false"}
+                checked={get("layer_weather") === "true"}
                 onChange={(v) => set({ layer_weather: v ? "true" : "false" })}
               />
             </div>
@@ -78,14 +108,14 @@ export default function FilterDashboard() {
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-foreground-muted">
                 <span>Min Risk</span>
-                <span>{(parseFloat(get("min_risk")) || 0).toFixed(1)}</span>
+                <span>{(parseFloat(get("min_risk") || "0")).toFixed(1)}</span>
               </div>
               <input
                 type="range"
                 min="0"
                 max="1"
                 step="0.1"
-                value={parseFloat(get("min_risk")) || 0}
+                value={parseFloat(get("min_risk") || "0")}
                 onChange={(e) => set({ min_risk: e.target.value })}
                 className="w-full h-1.5 rounded-lg bg-surface appearance-none cursor-pointer accent-accent"
               />
@@ -93,14 +123,14 @@ export default function FilterDashboard() {
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-foreground-muted">
                 <span>Min Confidence</span>
-                <span>{(parseFloat(get("min_confidence")) || 0).toFixed(1)}</span>
+                <span>{(parseFloat(get("min_confidence") || "0")).toFixed(1)}</span>
               </div>
               <input
                 type="range"
                 min="0"
                 max="1"
                 step="0.1"
-                value={parseFloat(get("min_confidence")) || 0}
+                value={parseFloat(get("min_confidence") || "0")}
                 onChange={(e) => set({ min_confidence: e.target.value })}
                 className="w-full h-1.5 rounded-lg bg-surface appearance-none cursor-pointer accent-accent"
               />
@@ -113,7 +143,7 @@ export default function FilterDashboard() {
             <input
               type="number"
               placeholder="Min cost ($)"
-              value={get("min_cost_usd")}
+              value={get("min_cost_usd") || ""}
               onChange={(e) => set({ min_cost_usd: e.target.value })}
               className="w-full rounded-lg border border-surface bg-background px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all placeholder:text-foreground-muted/50"
             />
@@ -136,10 +166,12 @@ export default function FilterDashboard() {
 function FilterSection({
   title,
   children,
+  icon,
   defaultOpen = false,
 }: {
   title: string;
   children: React.ReactNode;
+  icon?: React.ReactNode;
   defaultOpen?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -150,9 +182,12 @@ function FilterSection({
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between text-left focus:outline-none"
       >
-        <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/80 group-hover:text-accent transition-colors">
-          {title}
-        </h3>
+        <div className="flex items-center gap-2">
+          {icon && <span className="text-accent">{icon}</span>}
+          <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/80 group-hover:text-accent transition-colors">
+            {title}
+          </h3>
+        </div>
         <svg
           className={`h-4 w-4 text-foreground-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"

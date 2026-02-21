@@ -39,10 +39,10 @@ export default function MapSection() {
   };
 
   return (
-    <section id="map-section" className="bg-background py-8 px-4 sm:px-6 lg:px-8">
+    <section id="map-section" className="relative bg-background px-4 py-16 sm:px-6 lg:px-8 pb-40">
       <div className="mx-auto max-w-7xl">
         {/* Summary Stats Bar */}
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mb-12 flex flex-col items-center gap-8 md:flex-row md:justify-between md:gap-0">
           <StatCard
             label="High Risk Zones"
             value={filterState.layerRisk ? "12" : "--"}
@@ -72,6 +72,9 @@ export default function MapSection() {
           </aside>
           <div className="relative flex flex-1 flex-col">
             <div className="relative h-full min-h-[400px] rounded-2xl overflow-hidden shadow-2xl border border-surface/60">
+              {/* Industrial Accents on Map Container */}
+              <div className="absolute top-0 right-0 w-24 h-24 corner-hazard-tr opacity-10 z-[1001] pointer-events-none" />
+              <div className="absolute top-0 left-0 w-24 h-24 corner-hazard-tl opacity-10 z-[1001] pointer-events-none" />
               <WaterMap filterState={filterState} locationId={locationId} />
             </div>
           </div>

@@ -22,12 +22,40 @@
 
 .bg-hazard {
   background: repeating-linear-gradient(
-    45deg,
+    var(--hazard-angle, 45deg),
     var(--accent),
     var(--accent) 20px,
     var(--background) 20px,
     var(--background) 40px
   );
+}
+
+/* Industrial Scrollbars */
+.industrial-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.industrial-scrollbar::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 1px solid var(--surface);
+}
+
+.industrial-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border: 2px solid var(--background);
+  border-radius: 4px;
+}
+
+.industrial-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.corner-hazard-tr {
+  background: linear-gradient(225deg, var(--accent) 0%, var(--accent) 40px, transparent 40px);
+}
+.corner-hazard-tl {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 40px, transparent 40px);
 }
 
 body {
