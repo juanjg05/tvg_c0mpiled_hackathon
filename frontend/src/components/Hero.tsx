@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section className="relative flex h-[70vh] min-h-[500px] flex-col items-center justify-center overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-b from-background-alt/50 to-transparent" />
-      <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-8 text-center">
           <h1 className="max-w-3xl text-5xl font-bold tracking-tight text-zinc-50 sm:text-6xl md:text-7xl">
             AI Water System

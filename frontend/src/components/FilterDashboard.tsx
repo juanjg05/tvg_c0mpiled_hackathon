@@ -182,12 +182,41 @@ function LayerToggle({
   checked: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const icons: Record<string, React.ReactNode> = {
+    Risk: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+    ),
+    Cost: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    "311 Reports": (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9l-1.172-1.172a4 4 0 115.656-5.656l1.102-1.101m-8.658 4.054L10 17.657l-4.243-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    Advice: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+    ),
+    "Weather Overlay": (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+      </svg>
+    ),
+  };
+
   return (
     <label
-      className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border p-3 transition-all ${
+      className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border p-3 transition-all duration-200 ${
         checked
-          ? "border-accent/40 bg-accent/5 text-accent shadow-[0_0_15px_-5px_rgba(34,211,238,0.2)]"
-          : "border-surface bg-background/50 text-foreground-muted hover:border-surface-hover hover:bg-surface/20"
+          ? "border-accent/50 bg-accent/10 text-accent shadow-[0_0_20px_-5px_rgba(34,211,238,0.3)] ring-1 ring-accent/20"
+          : "border-surface bg-background/50 text-foreground-muted hover:border-surface-hover hover:bg-surface/30"
       }`}
     >
       <input
@@ -196,8 +225,15 @@ function LayerToggle({
         onChange={(e) => onChange(e.target.checked)}
         className="hidden"
       />
-      <div className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-accent shadow-[0_0_8px_rgba(34,211,238,1)]" : "bg-foreground-muted/30"}`} />
-      <span className="text-[10px] font-bold uppercase tracking-tighter text-center leading-none">{label}</span>
+      <div className={`transition-transform duration-200 ${checked ? "scale-110" : "scale-100 opacity-70"}`}>
+        {icons[label] || (
+          <div className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-accent shadow-[0_0_8px_rgba(34,211,238,1)]" : "bg-foreground-muted/30"}`} />
+        )}
+      </div>
+      <span className="text-[10px] font-bold uppercase tracking-tight text-center leading-none">{label}</span>
+      {checked && (
+        <div className="absolute top-1 right-1 h-1 w-1 rounded-full bg-accent animate-pulse" />
+      )}
     </label>
   );
 }

@@ -40,7 +40,7 @@ export default function MapSection() {
 
   return (
     <section id="map-section" className="bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1600px]">
+      <div className="mx-auto max-w-7xl">
         {/* Summary Stats Bar */}
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatCard

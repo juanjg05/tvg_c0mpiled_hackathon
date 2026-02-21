@@ -3,23 +3,22 @@
 import { useEffect } from "react";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { CHICAGO_BOUNDS } from "@/data/locations";
 
-export default function MapBoundsHandler({ isChicago }: { isChicago: boolean }) {
+export default function MapBoundsHandler({ bounds }: { bounds?: [[number, number], [number, number]] }) {
   const map = useMap();
 
   useEffect(() => {
-    if (isChicago) {
-      map.setMaxBounds(CHICAGO_BOUNDS);
-      (map.options as Record<string, unknown>).maxBoundsViscosity = 1;
+    if (bounds) {
+      map.setMaxBounds(bounds);
+      (map.options as Record<string, unknown>).maxBoundsViscosity = 1.0;
     } else {
-      (map.options as Record<string, unknown>).maxBoundsViscosity = 0;
       map.setMaxBounds([
         [-90, -180],
         [90, 180],
       ] as L.LatLngBoundsExpression);
+      (map.options as Record<string, unknown>).maxBoundsViscosity = 0.0;
     }
-  }, [map, isChicago]);
+  }, [map, bounds]);
 
   return null;
 }

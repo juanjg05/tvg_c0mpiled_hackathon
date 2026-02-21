@@ -63,7 +63,7 @@ export default function WaterMap({
         />
         <SpaceToPanHandler />
         <LocationSelector />
-        <MapBoundsHandler isChicago={isChicago} />
+        <MapBoundsHandler bounds={loc.bounds} />
         {isChicago && <MinimapOverlay />}
         {(filterState.layerRisk || filterState.layerCost) && (
           <HexGridLayer

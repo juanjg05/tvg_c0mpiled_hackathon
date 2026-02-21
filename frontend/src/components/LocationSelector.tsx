@@ -32,10 +32,10 @@ export default function LocationSelector({ onLocationChange }: LocationSelectorP
       <select
         onChange={handleChange}
         value={selectedId}
-        className="rounded-lg border border-[#2d3748] bg-[#1e2630]/95 px-4 py-2 text-sm text-zinc-100 shadow-lg backdrop-blur-sm outline-none focus:ring-2 focus:ring-cyan-400"
+        className="rounded-xl border border-surface/60 bg-background-alt/90 px-4 py-2 text-sm text-foreground shadow-2xl backdrop-blur-md outline-none focus:ring-2 focus:ring-accent transition-all cursor-pointer hover:border-accent/50"
       >
       {LOCATIONS.map((loc) => (
-        <option key={loc.id} value={loc.id}>
+        <option key={loc.id} value={loc.id} className="bg-background-alt text-foreground">
           {loc.name}
         </option>
       ))}
